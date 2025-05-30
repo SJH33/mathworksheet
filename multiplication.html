@@ -40,6 +40,8 @@
   </style>
 </head>
 <body>
+  <div id="navbar-container"></div>
+
   <h1>Multiplication Game</h1>
 
   <div id="username-entry">
@@ -221,5 +223,13 @@
 
     document.addEventListener("DOMContentLoaded", renderLeaderboard);
   </script>
+  <script>
+  fetch("navbar.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-container").innerHTML = data;
+    });
+</script>
+
 </body>
 </html>
