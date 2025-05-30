@@ -186,6 +186,14 @@ document.addEventListener("DOMContentLoaded", renderHistory);
 
 
 function clearHistory() {
-  localStorage.removeItem("worksheetHistory");
-  renderHistory();
+  const passcode = prompt("Enter passcode to clear download history:");
+
+  if (passcode === "9987") {
+    localStorage.removeItem("worksheetHistory");
+    renderHistory();
+    alert("Download history cleared.");
+  } else if (passcode !== null) {
+    alert("Incorrect passcode. History was not cleared.");
+  }
 }
+
