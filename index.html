@@ -73,7 +73,6 @@
       margin-bottom: 10px;
     }
 
-    /* Modal Styles */
     .digit-box {
       width: 40px;
       height: 50px;
@@ -161,14 +160,23 @@
     </div>
   </div>
 
-  <script src="worksheet.js"></script>
-  <script>
-  fetch("navbar.html")
-    .then(res => res.text())
-    .then(data => {
-      document.getElementById("navbar-container").innerHTML = data;
-    });
-</script>
+  <!-- Load work.js (instead of worksheet.js) -->
+  <script src="work.js"></script>
 
+  <!-- Load navbar.html dynamically -->
+  <script>
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("navbar-container").innerHTML = data;
+
+        const current = location.pathname.split("/").pop();
+        document.querySelectorAll(".nav-links a").forEach(link => {
+          if (link.getAttribute("href") === current) {
+            link.classList.add("active");
+          }
+        });
+      });
+  </script>
 </body>
 </html>
