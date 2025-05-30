@@ -13,8 +13,10 @@
       max-width: 600px;
       margin: auto;
     }
+
     h1 { color: #2c3e50; }
     .hidden { display: none; }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -25,18 +27,32 @@
       border: none;
       border-radius: 5px;
     }
+
     button:hover { background-color: #2980b9; }
+
     input[type="number"], input[type="text"] {
       font-size: 18px;
       padding: 8px;
       margin-top: 10px;
       width: 80%;
     }
+
     #question { font-size: 28px; margin: 20px 0; }
     #result, #timer { font-size: 20px; margin-top: 20px; }
-    #leaderboard { margin-top: 40px; text-align: left; }
-    #leaderboard h3 { text-align: center; }
-    ol { padding-left: 20px; }
+
+    #leaderboard {
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    #leaderboard h3 {
+      text-align: center;
+      color: #34495e;
+    }
+
+    ol {
+      padding-left: 20px;
+    }
   </style>
 </head>
 <body>
@@ -221,15 +237,22 @@
       win.print();
     }
 
-    document.addEventListener("DOMContentLoaded", renderLeaderboard);
-  </script>
-  <script>
-  fetch("navbar.html")
-    .then(res => res.text())
-    .then(data => {
-      document.getElementById("navbar-container").innerHTML = data;
-    });
-</script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderLeaderboard();
 
+      // Load navbar and highlight current page
+      fetch("navbar.html")
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById("navbar-container").innerHTML = data;
+          const current = location.pathname.split("/").pop();
+          document.querySelectorAll(".nav-links a").forEach(link => {
+            if (link.getAttribute("href") === current) {
+              link.classList.add("active");
+            }
+          });
+        });
+    });
+  </script>
 </body>
 </html>
