@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplication Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    input[type="number"] {
+      font-size: 18px;
+      width: 80px;
+      padding: 8px;
+      margin-top: 10px;
+    }
+
+    #question {
+      font-size: 28px;
+      margin: 20px 0;
+    }
+
+    #result, #timer {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+
+    #leaderboard {
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    #leaderboard h3 {
+      text-align: center;
+    }
+
+    ol {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Multiplication Game</h1>
+
+  <div id="level-selection">
+    <h2>Select Difficulty</h2>
+    <button onclick="startGame(10)">Beginner<br>(× up to 10)</button>
+    <button onclick="startGame(15)">Intermediate<br>(× up to 15)</button>
+    <button onclick="startGame(20)">Advanced<br>(× up to 20)</button>
+    <br>
+    <label><input type="checkbox" id="speedMode"> Enable 60-second Speed Mode</label>
+  </div>
+
+  <div id="game" class="hidden">
+    <div id="timer"></div>
+    <div id="question"></div>
+    <input type="number" id="answer" placeholder="Answer" onkeydown="handleKey(event)">
+    <div>
+      <button onclick="submitAnswer()">Submit</button>
+    </div>
+    <div id="feedback"></div>
+  </div>
+
+  <div id="score-screen" class="hidden">
+    <h2>Game Over!</h2>
+    <p>You got <strong id="score"></strong> out of <strong id="total"></strong> correct.</p>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+  <div id="leaderboard">
+    <h3>Leaderboard (Top 5)</h3>
+    <ol id="top-scores"></ol>
+  </div>
+
+  <audio id="ding" src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f3b9d2027.mp3"></audio>
+  <audio id="buzz" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c86e9fa746.mp3"></audio>
+
+  <script>
+    let maxMultiplier = 10;
+    let problems = [];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let timer = null;
+    let secondsLeft = 60;
+    let speedMode = false;
+
+    function startGame(max) {
+      maxMultiplier = max;
+      problems = [];
+      correctCount = 0;
+      currentIndex = 0;
+      speedMode = document.getElementById("speedMode").checked;
+
+      for (let i = 0; i < 15; i++) {
+        const a = Math.floor(Math.random() * 10) + 1;
+        const b = Math.floor(Math.random() * max) + 1;
+        problems.push({ a, b });
+      }
+
+      document.getElementById("level-selection").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+
+      if (speedMode) {
+        document.getElementById("timer").textContent = "Time Left: 60s";
+        timer = setInterval(() => {
+          secondsLeft--;
+          document.getElementById("timer").textContent = "Time Left: " + secondsLeft + "s";
+          if (secondsLeft <= 0) {
+            clearInterval(timer);
+            endGame();
+          }
+        }, 1000);
+      } else {
+        document.getElementById("timer").textContent = "";
+      }
+
+      showProblem();
+    }
+
+    function showProblem() {
+      const { a, b } = problems[currentIndex];
+      document.getElementById("question").textContent = `What is ${a} × ${b}?`;
+      document.getElementById("answer").value = '';
+      document.getElementById("answer").focus();
+      document.getElementById("feedback").textContent = '';
+    }
+
+    function submitAnswer() {
+      const userAnswer = parseInt(document.getElementById("answer").value);
+      const { a, b } = problems[currentIndex];
+      const correct = a * b;
+
+      if (userAnswer === correct) {
+        correctCount++;
+        document.getElementById("ding").play();
+        document.getElementById("feedback").textContent = "✅ Correct!";
+      } else {
+        document.getElementById("buzz").play();
+        document.getElementById("feedback").textContent = `❌ Oops! It was ${correct}.`;
+      }
+
+      currentIndex++;
+
+      setTimeout(() => {
+        if (currentIndex < problems.length && (!speedMode || secondsLeft > 0)) {
+          showProblem();
+        } else {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function handleKey(event) {
+      if (event.key === "Enter") {
+        submitAnswer();
+      }
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("score-screen").classList.remove("hidden");
+      document.getElementById("score").textContent = correctCount;
+      document.getElementById("total").textContent = currentIndex;
+
+      let leaderboard = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
+      leaderboard.push({ score: correctCount, date: new Date().toLocaleString() });
+      leaderboard.sort((a, b) => b.score - a.score);
+      leaderboard = leaderboard.slice(0, 5);
+      localStorage.setItem("multiplicationLeaderboard", JSON.stringify(leaderboard));
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      const list = document.getElementById("top-scores");
+      const data = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
+      list.innerHTML = "";
+      data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.score} correct — ${item.date}`;
+        list.appendChild(li);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", renderLeaderboard);
+  </script>
+</body>
+</html>
