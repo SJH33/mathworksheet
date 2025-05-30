@@ -1,0 +1,96 @@
+<style>
+  nav {
+    position: sticky;
+    top: 0;
+    background-color: #2c3e50;
+    color: white;
+    z-index: 1000;
+    padding: 10px 20px;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .site-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 15px;
+  }
+
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .nav-links a.active {
+    border-bottom: 2px solid #f1c40f;
+  }
+
+  .hamburger {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      background-color: #2c3e50;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .nav-links.show {
+      display: flex;
+    }
+
+    .hamburger {
+      display: block;
+      color: white;
+    }
+  }
+</style>
+
+<nav>
+  <div class="nav-container">
+    <a href="index.html" class="site-title">Math with Ms. Jean</a>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="multiplication.html">Multiplication</a>
+      <a href="addition.html">Addition</a>
+      <a href="subtraction.html">Subtraction</a>
+      <a href="division.html">Division</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  function toggleMenu() {
+    document.getElementById("nav-links").classList.toggle("show");
+  }
+
+  // Highlight current page
+  const current = location.pathname.split("/").pop();
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    if (link.getAttribute("href") === current) {
+      link.classList.add("active");
+    }
+  });
+</script>
