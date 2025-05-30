@@ -13,28 +13,43 @@
       max-width: 800px;
       margin: auto;
     }
+
     h1 {
       text-align: center;
       color: #2c3e50;
+      font-size: 32px;
+      margin-bottom: 30px;
     }
+
     fieldset {
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      padding: 15px;
+      margin-bottom: 25px;
+      border: 2px solid #eee;
+      padding: 20px;
+      border-radius: 6px;
     }
+
+    fieldset legend {
+      font-size: 20px;
+      font-weight: bold;
+      color: #34495e;
+    }
+
     label {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       margin: 6px 0;
     }
+
     label input[type="number"] {
       margin-left: 10px;
       width: 50px;
     }
+
     button {
       display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
+      margin: 30px auto;
+      padding: 12px 24px;
       font-size: 16px;
       background-color: #3498db;
       color: white;
@@ -42,12 +57,15 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #2980b9;
     }
+
     #history {
       margin-top: 40px;
     }
+
     .history-item {
       background-color: #f6f6f6;
       border: 1px solid #ccc;
@@ -62,49 +80,49 @@
 
   <form id="worksheetForm">
     <fieldset>
-      <legend><strong>Integers</strong></legend>
-      <label><input type="checkbox" name="topics" value="int-add"> Addition
+      <legend>Integers</legend>
+      <label><span><input type="checkbox" name="topics" value="int-add"> Addition</span>
         <input type="number" name="count-int-add" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="int-sub"> Subtraction
+      <label><span><input type="checkbox" name="topics" value="int-sub"> Subtraction</span>
         <input type="number" name="count-int-sub" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="int-mul"> Multiplication
+      <label><span><input type="checkbox" name="topics" value="int-mul"> Multiplication</span>
         <input type="number" name="count-int-mul" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="int-div"> Division
+      <label><span><input type="checkbox" name="topics" value="int-div"> Division</span>
         <input type="number" name="count-int-div" min="1" max="10" value="1">
       </label>
     </fieldset>
 
     <fieldset>
-      <legend><strong>Fractions</strong></legend>
-      <label><input type="checkbox" name="topics" value="frac-add"> Addition
+      <legend>Fractions</legend>
+      <label><span><input type="checkbox" name="topics" value="frac-add"> Addition</span>
         <input type="number" name="count-frac-add" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="frac-sub"> Subtraction
+      <label><span><input type="checkbox" name="topics" value="frac-sub"> Subtraction</span>
         <input type="number" name="count-frac-sub" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="frac-mul"> Multiplication
+      <label><span><input type="checkbox" name="topics" value="frac-mul"> Multiplication</span>
         <input type="number" name="count-frac-mul" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="frac-div"> Division
+      <label><span><input type="checkbox" name="topics" value="frac-div"> Division</span>
         <input type="number" name="count-frac-div" min="1" max="10" value="1">
       </label>
     </fieldset>
 
     <fieldset>
-      <legend><strong>Decimals</strong></legend>
-      <label><input type="checkbox" name="topics" value="dec-add"> Addition
+      <legend>Decimals</legend>
+      <label><span><input type="checkbox" name="topics" value="dec-add"> Addition</span>
         <input type="number" name="count-dec-add" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="dec-sub"> Subtraction
+      <label><span><input type="checkbox" name="topics" value="dec-sub"> Subtraction</span>
         <input type="number" name="count-dec-sub" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="dec-mul"> Multiplication
+      <label><span><input type="checkbox" name="topics" value="dec-mul"> Multiplication</span>
         <input type="number" name="count-dec-mul" min="1" max="10" value="1">
       </label>
-      <label><input type="checkbox" name="topics" value="dec-div"> Division
+      <label><span><input type="checkbox" name="topics" value="dec-div"> Division</span>
         <input type="number" name="count-dec-div" min="1" max="10" value="1">
       </label>
     </fieldset>
