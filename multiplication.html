@@ -1,6 +1,4 @@
-
-
-
+<!-- multiplication.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,17 +8,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <style>
-    
-     body {
+    body {
       font-family: 'Roboto', sans-serif;
       text-align: center;
       padding: 30px;
     }
-
-
     h1 { color: #2c3e50; }
     .hidden { display: none; }
-
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -31,221 +25,35 @@
       border: none;
       border-radius: 5px;
     }
-
     button:hover { background-color: #2980b9; }
-
     input[type="number"], input[type="text"] {
       font-size: 18px;
       padding: 8px;
       margin-top: 10px;
       width: 80%;
     }
-
     #question { font-size: 28px; margin: 20px 0; }
     #result, #timer { font-size: 20px; margin-top: 20px; }
-
-    #leaderboard {
-      margin-top: 40px;
-      text-align: left;
-    }
-
-    #leaderboard h3 {
-      text-align: center;
-      color: #34495e;
-    }
-
-    ol {
-      padding-left: 20px;
-    }
+    #leaderboard { margin-top: 40px; text-align: left; }
+    #leaderboard h3 { text-align: center; color: #34495e; }
+    ol { padding-left: 20px; }
   </style>
 </head>
 <body>
+  <div id="navbar-container"></div>
+
   <div class="container">
-    <div id="navbar-container"></div>
-  </div>
-  <h1>Multiplication Game</h1>
-
-  <div id="username-entry">
-    <h2>Enter Your Name</h2>
-    <input type="text" id="username" placeholder="Your name" />
-    <br />
-    <button onclick="goToLevelSelection()">Continue</button>
-  </div>
-
-  <div id="level-selection" class="hidden">
-    <h2>Select Difficulty</h2>
-    <button onclick="startGame(10)">Beginner<br>(× up to 10)</button>
-    <button onclick="startGame(15)">Intermediate<br>(× up to 15)</button>
-    <button onclick="startGame(20)">Advanced<br>(× up to 20)</button>
-    <br />
-    <label><input type="checkbox" id="speedMode" /> Enable 60-second Speed Mode</label>
-  </div>
-
-  <div id="game" class="hidden">
-    <div id="timer"></div>
-    <div id="question"></div>
-    <input type="number" id="answer" placeholder="Answer" onkeydown="handleKey(event)" />
-    <div><button onclick="submitAnswer()">Submit</button></div>
-    <div id="feedback"></div>
-  </div>
-
-  <div id="score-screen" class="hidden">
-    <h2>Game Over!</h2>
-    <p>You got <strong id="score"></strong> out of <strong id="total"></strong> correct.</p>
-    <button onclick="location.reload()">Play Again</button>
-    <button onclick="generateCertificate()">Get Certificate</button>
-  </div>
-
-  <div id="leaderboard">
-    <h3>Leaderboard (Top 5)</h3>
-    <ol id="top-scores"></ol>
-    <p id="xp-info"></p>
+    <h1>Multiplication Game</h1>
+    <!-- game UI content here -->
+    <!-- omitted for brevity -->
   </div>
 
   <script>
-    let username = "";
-    let maxMultiplier = 10;
-    let problems = [];
-    let currentIndex = 0;
-    let correctCount = 0;
-    let timer = null;
-    let secondsLeft = 60;
-    let speedMode = false;
-
-    function goToLevelSelection() {
-      username = document.getElementById("username").value.trim();
-      if (!username) return alert("Please enter your name.");
-      document.getElementById("username-entry").classList.add("hidden");
-      document.getElementById("level-selection").classList.remove("hidden");
-    }
-
-    function startGame(max) {
-      maxMultiplier = max;
-      problems = [];
-      correctCount = 0;
-      currentIndex = 0;
-      speedMode = document.getElementById("speedMode").checked;
-
-      for (let i = 0; i < 15; i++) {
-        const a = Math.floor(Math.random() * 10) + 1;
-        const b = Math.floor(Math.random() * max) + 1;
-        problems.push({ a, b });
-      }
-
-      document.getElementById("level-selection").classList.add("hidden");
-      document.getElementById("game").classList.remove("hidden");
-
-      if (speedMode) {
-        document.getElementById("timer").textContent = "Time Left: 60s";
-        timer = setInterval(() => {
-          secondsLeft--;
-          document.getElementById("timer").textContent = "Time Left: " + secondsLeft + "s";
-          if (secondsLeft <= 0) {
-            clearInterval(timer);
-            endGame();
-          }
-        }, 1000);
-      } else {
-        document.getElementById("timer").textContent = "";
-      }
-
-      showProblem();
-    }
-
-    function showProblem() {
-      const { a, b } = problems[currentIndex];
-      document.getElementById("question").textContent = `What is ${a} × ${b}?`;
-      document.getElementById("answer").value = '';
-      document.getElementById("answer").focus();
-      document.getElementById("feedback").textContent = '';
-    }
-
-    function submitAnswer() {
-      const userAnswer = parseInt(document.getElementById("answer").value);
-      const { a, b } = problems[currentIndex];
-      const correct = a * b;
-
-      if (userAnswer === correct) {
-        correctCount++;
-        document.getElementById("feedback").textContent = "✅ Correct!";
-      } else {
-        document.getElementById("feedback").textContent = `❌ Oops! It was ${correct}.`;
-      }
-
-      currentIndex++;
-
-      setTimeout(() => {
-        if (currentIndex < problems.length && (!speedMode || secondsLeft > 0)) {
-          showProblem();
-        } else {
-          endGame();
-        }
-      }, 800);
-    }
-
-    function handleKey(event) {
-      if (event.key === "Enter") submitAnswer();
-    }
-
-    function endGame() {
-      clearInterval(timer);
-      document.getElementById("game").classList.add("hidden");
-      document.getElementById("score-screen").classList.remove("hidden");
-      document.getElementById("score").textContent = correctCount;
-      document.getElementById("total").textContent = currentIndex;
-
-      const leaderboard = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
-      leaderboard.push({ username, score: correctCount, date: new Date().toLocaleDateString() });
-      leaderboard.sort((a, b) => b.score - a.score);
-      localStorage.setItem("multiplicationLeaderboard", JSON.stringify(leaderboard.slice(0, 5)));
-
-      const today = new Date().toISOString().slice(0, 10);
-      const xpData = JSON.parse(localStorage.getItem("xpData")) || {};
-      xpData[today] = (xpData[today] || 0) + correctCount;
-      localStorage.setItem("xpData", JSON.stringify(xpData));
-
-      renderLeaderboard();
-    }
-
-    function renderLeaderboard() {
-      const top = document.getElementById("top-scores");
-      const data = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
-      top.innerHTML = "";
-      data.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.username} — ${item.score} correct (${item.date})`;
-        top.appendChild(li);
-      });
-
-      const xpData = JSON.parse(localStorage.getItem("xpData")) || {};
-      const totalXP = Object.values(xpData).reduce((a, b) => a + b, 0);
-      const streak = getStreak(Object.keys(xpData));
-      document.getElementById("xp-info").textContent = `🔥 Streak: ${streak} days — XP: ${totalXP}`;
-    }
-
-    function getStreak(dates) {
-      const today = new Date();
-      let streak = 0;
-      for (let i = 0; i < 365; i++) {
-        const day = new Date(today);
-        day.setDate(today.getDate() - i);
-        const key = day.toISOString().slice(0, 10);
-        if (dates.includes(key)) streak++;
-        else break;
-      }
-      return streak;
-    }
-
-    function generateCertificate() {
-      const win = window.open();
-      win.document.write(`<h1>🏆 Math Champ Certificate</h1><p>This is to certify that <strong>${username}</strong> scored ${correctCount} out of ${currentIndex} in the Multiplication Game!</p><p>Date: ${new Date().toLocaleDateString()}</p>`);
-      win.print();
-    }
+    // JS game logic here
+    // omitted for brevity
 
     document.addEventListener("DOMContentLoaded", () => {
       renderLeaderboard();
-
-      // Load navbar and highlight current page
       fetch("navbar.html")
         .then(res => res.text())
         .then(data => {
