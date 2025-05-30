@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Multiplication Game</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <style>
@@ -13,15 +13,8 @@
       max-width: 600px;
       margin: auto;
     }
-
-    h1 {
-      color: #2c3e50;
-    }
-
-    .hidden {
-      display: none;
-    }
-
+    h1 { color: #2c3e50; }
+    .hidden { display: none; }
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -32,62 +25,44 @@
       border: none;
       border-radius: 5px;
     }
-
-    button:hover {
-      background-color: #2980b9;
-    }
-
-    input[type="number"] {
+    button:hover { background-color: #2980b9; }
+    input[type="number"], input[type="text"] {
       font-size: 18px;
-      width: 80px;
       padding: 8px;
       margin-top: 10px;
+      width: 80%;
     }
-
-    #question {
-      font-size: 28px;
-      margin: 20px 0;
-    }
-
-    #result, #timer {
-      font-size: 20px;
-      margin-top: 20px;
-    }
-
-    #leaderboard {
-      margin-top: 40px;
-      text-align: left;
-    }
-
-    #leaderboard h3 {
-      text-align: center;
-    }
-
-    ol {
-      padding-left: 20px;
-    }
+    #question { font-size: 28px; margin: 20px 0; }
+    #result, #timer { font-size: 20px; margin-top: 20px; }
+    #leaderboard { margin-top: 40px; text-align: left; }
+    #leaderboard h3 { text-align: center; }
+    ol { padding-left: 20px; }
   </style>
 </head>
 <body>
-
   <h1>Multiplication Game</h1>
 
-  <div id="level-selection">
+  <div id="username-entry">
+    <h2>Enter Your Name</h2>
+    <input type="text" id="username" placeholder="Your name" />
+    <br />
+    <button onclick="goToLevelSelection()">Continue</button>
+  </div>
+
+  <div id="level-selection" class="hidden">
     <h2>Select Difficulty</h2>
     <button onclick="startGame(10)">Beginner<br>(× up to 10)</button>
     <button onclick="startGame(15)">Intermediate<br>(× up to 15)</button>
     <button onclick="startGame(20)">Advanced<br>(× up to 20)</button>
-    <br>
-    <label><input type="checkbox" id="speedMode"> Enable 60-second Speed Mode</label>
+    <br />
+    <label><input type="checkbox" id="speedMode" /> Enable 60-second Speed Mode</label>
   </div>
 
   <div id="game" class="hidden">
     <div id="timer"></div>
     <div id="question"></div>
-    <input type="number" id="answer" placeholder="Answer" onkeydown="handleKey(event)">
-    <div>
-      <button onclick="submitAnswer()">Submit</button>
-    </div>
+    <input type="number" id="answer" placeholder="Answer" onkeydown="handleKey(event)" />
+    <div><button onclick="submitAnswer()">Submit</button></div>
     <div id="feedback"></div>
   </div>
 
@@ -95,17 +70,17 @@
     <h2>Game Over!</h2>
     <p>You got <strong id="score"></strong> out of <strong id="total"></strong> correct.</p>
     <button onclick="location.reload()">Play Again</button>
+    <button onclick="generateCertificate()">Get Certificate</button>
   </div>
 
   <div id="leaderboard">
     <h3>Leaderboard (Top 5)</h3>
     <ol id="top-scores"></ol>
+    <p id="xp-info"></p>
   </div>
 
-  <audio id="ding" src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f3b9d2027.mp3"></audio>
-  <audio id="buzz" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c86e9fa746.mp3"></audio>
-
   <script>
+    let username = "";
     let maxMultiplier = 10;
     let problems = [];
     let currentIndex = 0;
@@ -113,6 +88,13 @@
     let timer = null;
     let secondsLeft = 60;
     let speedMode = false;
+
+    function goToLevelSelection() {
+      username = document.getElementById("username").value.trim();
+      if (!username) return alert("Please enter your name.");
+      document.getElementById("username-entry").classList.add("hidden");
+      document.getElementById("level-selection").classList.remove("hidden");
+    }
 
     function startGame(max) {
       maxMultiplier = max;
@@ -162,10 +144,8 @@
 
       if (userAnswer === correct) {
         correctCount++;
-        document.getElementById("ding").play();
         document.getElementById("feedback").textContent = "✅ Correct!";
       } else {
-        document.getElementById("buzz").play();
         document.getElementById("feedback").textContent = `❌ Oops! It was ${correct}.`;
       }
 
@@ -177,13 +157,11 @@
         } else {
           endGame();
         }
-      }, 1000);
+      }, 800);
     }
 
     function handleKey(event) {
-      if (event.key === "Enter") {
-        submitAnswer();
-      }
+      if (event.key === "Enter") submitAnswer();
     }
 
     function endGame() {
@@ -193,23 +171,52 @@
       document.getElementById("score").textContent = correctCount;
       document.getElementById("total").textContent = currentIndex;
 
-      let leaderboard = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
-      leaderboard.push({ score: correctCount, date: new Date().toLocaleString() });
+      const leaderboard = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
+      leaderboard.push({ username, score: correctCount, date: new Date().toLocaleDateString() });
       leaderboard.sort((a, b) => b.score - a.score);
-      leaderboard = leaderboard.slice(0, 5);
-      localStorage.setItem("multiplicationLeaderboard", JSON.stringify(leaderboard));
+      localStorage.setItem("multiplicationLeaderboard", JSON.stringify(leaderboard.slice(0, 5)));
+
+      const today = new Date().toISOString().slice(0, 10);
+      const xpData = JSON.parse(localStorage.getItem("xpData")) || {};
+      xpData[today] = (xpData[today] || 0) + correctCount;
+      localStorage.setItem("xpData", JSON.stringify(xpData));
+
       renderLeaderboard();
     }
 
     function renderLeaderboard() {
-      const list = document.getElementById("top-scores");
+      const top = document.getElementById("top-scores");
       const data = JSON.parse(localStorage.getItem("multiplicationLeaderboard")) || [];
-      list.innerHTML = "";
+      top.innerHTML = "";
       data.forEach(item => {
         const li = document.createElement("li");
-        li.textContent = `${item.score} correct — ${item.date}`;
-        list.appendChild(li);
+        li.textContent = `${item.username} — ${item.score} correct (${item.date})`;
+        top.appendChild(li);
       });
+
+      const xpData = JSON.parse(localStorage.getItem("xpData")) || {};
+      const totalXP = Object.values(xpData).reduce((a, b) => a + b, 0);
+      const streak = getStreak(Object.keys(xpData));
+      document.getElementById("xp-info").textContent = `🔥 Streak: ${streak} days — XP: ${totalXP}`;
+    }
+
+    function getStreak(dates) {
+      const today = new Date();
+      let streak = 0;
+      for (let i = 0; i < 365; i++) {
+        const day = new Date(today);
+        day.setDate(today.getDate() - i);
+        const key = day.toISOString().slice(0, 10);
+        if (dates.includes(key)) streak++;
+        else break;
+      }
+      return streak;
+    }
+
+    function generateCertificate() {
+      const win = window.open();
+      win.document.write(`<h1>🏆 Math Champ Certificate</h1><p>This is to certify that <strong>${username}</strong> scored ${correctCount} out of ${currentIndex} in the Multiplication Game!</p><p>Date: ${new Date().toLocaleDateString()}</p>`);
+      win.print();
     }
 
     document.addEventListener("DOMContentLoaded", renderLeaderboard);
