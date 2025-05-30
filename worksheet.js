@@ -146,7 +146,6 @@ async function generatePDF() {
   doc.setFont("courier", "normal");
   for (let item of answers) {
     if (Array.isArray(item.answer)) {
-      // Fraction format
       const [num, den] = item.answer;
       const lines = renderFractionLines(num, den);
       doc.text(`${item.number}.`, 10, y);
@@ -184,16 +183,47 @@ function renderHistory() {
 
 document.addEventListener("DOMContentLoaded", renderHistory);
 
+// ----- MODAL PASSCODE LOGIC -----
 
-function clearHistory() {
-  const passcode = prompt("Enter passcode to clear download history:");
+function showModal() {
+  document.getElementById("modal").style.display = "block";
+  document.getElementById("digit1").focus();
+  clearDigits();
+}
 
-  if (passcode === "9987") {
-    localStorage.removeItem("worksheetHistory");
-    renderHistory();
-    alert("Download history cleared.");
-  } else if (passcode !== null) {
-    alert("Incorrect passcode. History was not cleared.");
+function hideModal() {
+  document.getElementById("modal").style.display = "none";
+  clearDigits();
+}
+
+function clearDigits() {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById(`digit${i}`).value = "";
   }
 }
 
+function moveNext(current, nextId) {
+  const next = document.getElementById(nextId);
+  if (current.value.length === 1 && next) {
+    next.focus();
+  }
+}
+
+function submitIfReady() {
+  const code = ['digit1', 'digit2', 'digit3', 'digit4']
+    .map(id => document.getElementById(id).value)
+    .join('');
+
+  if (code.length === 4) {
+    if (code === "9987") {
+      localStorage.removeItem("worksheetHistory");
+      renderHistory();
+      alert("Download history cleared.");
+      hideModal();
+    } else {
+      alert("Incorrect passcode.");
+      clearDigits();
+      document.getElementById("digit1").focus();
+    }
+  }
+}
