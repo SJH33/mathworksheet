@@ -183,3 +183,9 @@ function renderHistory() {
 }
 
 document.addEventListener("DOMContentLoaded", renderHistory);
+
+
+function clearHistory() {
+  localStorage.removeItem("worksheetHistory");
+  renderHistory();
+}
