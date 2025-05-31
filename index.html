@@ -71,10 +71,38 @@
       cursor: pointer;
       text-decoration: underline;
     }
+
+    .nav-links a.active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <div id="navbar-container"></div>
+
+  <!-- Dynamically inject navbar.html here -->
+  <script>
+    fetch("navbar.html")
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to load navbar");
+        return response.text();
+      })
+      .then(html => {
+        const navbarWrapper = document.createElement('div');
+        navbarWrapper.innerHTML = html;
+        document.body.insertBefore(navbarWrapper, document.body.firstChild);
+
+        const current = location.pathname.split("/").pop();
+        document.querySelectorAll(".nav-links a").forEach(link => {
+          if (link.getAttribute("href") === current) {
+            link.classList.add("active");
+          }
+        });
+      })
+      .catch(error => {
+        console.error("Navbar load error:", error);
+      });
+  </script>
 
   <h1 id="form-title">Sign Up</h1>
 
@@ -121,3 +149,28 @@
       toggleLink.textContent = isSignUp ? 'Log In' : 'Sign Up';
       form.querySelector('button').textContent = isSignUp ? 'Sign Up' : 'Log In';
     }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (isSignUp) {
+        if (password !== confirmPassword) {
+          alert('Passwords do not match!');
+          return;
+        }
+        alert(`Welcome, ${name}! You are now signed up.`);
+        // TODO: Send signup data to backend.
+      } else {
+        alert(`Welcome back, ${email}!`);
+        // TODO: Authenticate login via backend.
+      }
+
+      form.reset();
+    });
+  </script>
+</body>
+</html>
