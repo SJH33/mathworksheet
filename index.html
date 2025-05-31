@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Math Worksheet Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>User Login / Signup</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Roboto', sans-serif;
       padding: 20px;
-      max-width: 800px;
+      max-width: 400px;
       margin: auto;
     }
 
@@ -21,35 +20,34 @@
       margin-bottom: 30px;
     }
 
-    fieldset {
-      margin-bottom: 25px;
+    form {
       border: 2px solid #eee;
       padding: 20px;
       border-radius: 6px;
-    }
-
-    fieldset legend {
-      font-size: 20px;
-      font-weight: bold;
-      color: #34495e;
+      background-color: #fafafa;
     }
 
     label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 6px 0;
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
     }
 
-    label input[type="number"] {
-      margin-left: 10px;
-      width: 50px;
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
 
     button {
       display: block;
-      margin: 30px auto;
-      padding: 12px 24px;
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
       font-size: 16px;
       background-color: #3498db;
       color: white;
@@ -62,121 +60,64 @@
       background-color: #2980b9;
     }
 
-    #history {
-      margin-top: 40px;
-    }
-
-    .history-item {
-      background-color: #f6f6f6;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    .digit-box {
-      width: 40px;
-      height: 50px;
-      font-size: 24px;
+    .toggle-form {
       text-align: center;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+      margin-top: 20px;
+      color: #555;
+    }
+
+    .toggle-form a {
+      color: #3498db;
+      cursor: pointer;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div id="navbar-container"></div>
 
-  <h1>Worksheet Generator</h1>
+  <h1 id="form-title">Sign Up</h1>
 
-  <form id="worksheetForm">
-    <fieldset>
-      <legend>Integers</legend>
-      <label><span><input type="checkbox" name="topics" value="int-add" checked> Addition</span>
-        <input type="number" name="count-int-add" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="int-sub" checked> Subtraction</span>
-        <input type="number" name="count-int-sub" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="int-mul" checked> Multiplication</span>
-        <input type="number" name="count-int-mul" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="int-div" checked> Division</span>
-        <input type="number" name="count-int-div" min="1" max="10" value="1">
-      </label>
-    </fieldset>
+  <form id="authForm">
+    <div id="nameField">
+      <label for="name">Name</label>
+      <input type="text" id="name" required />
+    </div>
 
-    <fieldset>
-      <legend>Fractions</legend>
-      <label><span><input type="checkbox" name="topics" value="frac-add" checked> Addition</span>
-        <input type="number" name="count-frac-add" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="frac-sub" checked> Subtraction</span>
-        <input type="number" name="count-frac-sub" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="frac-mul" checked> Multiplication</span>
-        <input type="number" name="count-frac-mul" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="frac-div" checked> Division</span>
-        <input type="number" name="count-frac-div" min="1" max="10" value="1">
-      </label>
-    </fieldset>
+    <label for="email">Email</label>
+    <input type="email" id="email" required />
 
-    <fieldset>
-      <legend>Decimals</legend>
-      <label><span><input type="checkbox" name="topics" value="dec-add" checked> Addition</span>
-        <input type="number" name="count-dec-add" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="dec-sub" checked> Subtraction</span>
-        <input type="number" name="count-dec-sub" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="dec-mul" checked> Multiplication</span>
-        <input type="number" name="count-dec-mul" min="1" max="10" value="1">
-      </label>
-      <label><span><input type="checkbox" name="topics" value="dec-div" checked> Division</span>
-        <input type="number" name="count-dec-div" min="1" max="10" value="1">
-      </label>
-    </fieldset>
+    <label for="password">Password</label>
+    <input type="password" id="password" required />
 
-    <button type="button" onclick="generatePDF()">Generate Worksheet</button>
+    <div id="confirmPasswordField">
+      <label for="confirm-password">Confirm Password</label>
+      <input type="password" id="confirm-password" required />
+    </div>
+
+    <button type="submit">Sign Up</button>
   </form>
 
-  <div id="history">
-    <h3>Recent Downloads</h3>
-    <div id="history-list"></div>
-    <button type="button" onclick="showModal()">Clear Download History</button>
+  <div class="toggle-form">
+    <span id="toggleText">Already have an account?</span>
+    <a onclick="toggleForm()">Log In</a>
   </div>
 
-  <!-- Passcode Modal -->
-  <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000088; z-index:999;">
-    <div style="background:white; padding:30px; margin:100px auto; width:320px; border-radius:12px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.3);">
-      <h3>Enter 4-Digit Passcode</h3>
-      <div style="display:flex; justify-content:center; gap:10px; margin:20px 0;">
-        <input type="text" maxlength="1" class="digit-box" id="digit1" oninput="moveNext(this, 'digit2')" />
-        <input type="text" maxlength="1" class="digit-box" id="digit2" oninput="moveNext(this, 'digit3')" />
-        <input type="text" maxlength="1" class="digit-box" id="digit3" oninput="moveNext(this, 'digit4')" />
-        <input type="text" maxlength="1" class="digit-box" id="digit4" oninput="submitIfReady()" />
-      </div>
-      <button onclick="hideModal()">Cancel</button>
-    </div>
-  </div>
-
-  <!-- Load work.js (instead of worksheet.js) -->
-  <script src="work.js"></script>
-
-  <!-- Load navbar.html dynamically -->
   <script>
-    fetch("navbar.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("navbar-container").innerHTML = data;
+    const form = document.getElementById('authForm');
+    const nameField = document.getElementById('nameField');
+    const confirmPasswordField = document.getElementById('confirmPasswordField');
+    const formTitle = document.getElementById('form-title');
+    const toggleText = document.getElementById('toggleText');
+    const toggleLink = document.querySelector('.toggle-form a');
+    let isSignUp = true;
 
-        const current = location.pathname.split("/").pop();
-        document.querySelectorAll(".nav-links a").forEach(link => {
-          if (link.getAttribute("href") === current) {
-            link.classList.add("active");
-          }
-        });
-      });
-  </script>
-</body>
-</html>
+    function toggleForm() {
+      isSignUp = !isSignUp;
+      formTitle.textContent = isSignUp ? 'Sign Up' : 'Log In';
+      nameField.style.display = isSignUp ? 'block' : 'none';
+      confirmPasswordField.style.display = isSignUp ? 'block' : 'none';
+      toggleText.textContent = isSignUp ? 'Already have an account?' : "Don't have an account?";
+      toggleLink.textContent = isSignUp ? 'Log In' : 'Sign Up';
+      form.querySelector('button').textContent = isSignUp ? 'Sign Up' : 'Log In';
+    }
