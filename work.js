@@ -227,3 +227,4 @@ function submitIfReady() {
     }
   }
 }
+window.generatePDF = generatePDF;
